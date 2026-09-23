@@ -15,6 +15,13 @@ public class BattlePanel : MonoBehaviour
     [SerializeField] private TMP_Text _attackerDiceValue;
     [SerializeField] private TMP_Text _defenderDiceValue;
 
+    [SerializeField] private GameObject _battleDiceButton;
+
+    private void OnEnable()
+    {
+        _battleDiceButton.SetActive(true);
+    }
+
     public void DrawInfo(IDamageable attacker,  IDamageable defender)
     {
         _attackerHpText.text = "Hp : " + attacker.Hp.ToString();

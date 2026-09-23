@@ -6,6 +6,7 @@ public class Player : MonoBehaviour, IDamageable
     private Tile _currentTile;
     private int _attackDamage = 2;
     private int _defense = 2;
+    private int _maxHp = 10;
     private int _hp = 10;
     private int _gold = 10;
 
@@ -14,6 +15,7 @@ public class Player : MonoBehaviour, IDamageable
     public int AttackDamage => _attackDamage;
     public int Defense => _defense;
     public int Hp => _hp;
+    public int MaxHp => _maxHp;
     public int Gold => _gold;
 
     public void SpawnToTile(Tile spawnTile)
@@ -43,5 +45,14 @@ public class Player : MonoBehaviour, IDamageable
     public void TakeDamage(int damage)
     {
         _hp -= Mathf.Max(0, damage);
+    }
+    public void RestoreHp(int amount)
+    {
+        _hp += Mathf.Max(0, amount);
+        _hp = Mathf.Min(_hp, _maxHp);
+    }
+    public void AddGold(int amount)
+    {
+        _gold += amount;
     }
 }

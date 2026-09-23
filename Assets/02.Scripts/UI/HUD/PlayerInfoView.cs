@@ -21,7 +21,7 @@ public class PlayerInfoView : MonoBehaviour
 
     private void Refresh()
     {
-        _hpText.text = "HP : " + _stream.Player.Hp.ToString();
+        _hpText.text = "HP : " + _stream.Player.Hp.ToString() + "/" + _stream.Player.MaxHp.ToString();
         _atkText.text = "ATK : " + _stream.Player.AttackDamage.ToString();
         _defText.text = "DEF : " + _stream.Player.Defense.ToString();
         _goldText.text = "GOLD : " + _stream.Player.Gold.ToString();

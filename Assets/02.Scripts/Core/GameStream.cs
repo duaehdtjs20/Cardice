@@ -15,6 +15,8 @@ public class GameStream : MonoBehaviour, IRefreshable
     [SerializeField] private Enemy _enemyPrefab;
     [SerializeField] private BoardController _board;
     [SerializeField] private BattlePanel _battlePanel;
+    [SerializeField] private GameObject _cardShopPanel;
+    [SerializeField] private GameObject _moveDiceButton;
 
     private bool _isRoll = false;
     private bool _isClose = false;
@@ -24,10 +26,12 @@ public class GameStream : MonoBehaviour, IRefreshable
     private Enemy _enemy;
     private int _round = 1;
     private Tile _selectedTile;
+    private int _diceValue = 0;
 
     public Player Player => _player;
     public Enemy Enemy => _enemy;
     public int Round => _round;
+    public int DiceValue => _diceValue;
 
     private void Start()
     {
@@ -43,6 +47,7 @@ public class GameStream : MonoBehaviour, IRefreshable
         _isClose = true;
     }
 
+    #region 메인 흐름 리전
     private IEnumerator StreamCo()
     {
         yield return null;
@@ -72,6 +77,7 @@ public class GameStream : MonoBehaviour, IRefreshable
 
             // 라운드 진행
             _round++;
+            _diceValue = 0;
             OnChanged?.Invoke();
         }
 
@@ -82,11 +88,14 @@ public class GameStream : MonoBehaviour, IRefreshable
         // 효과 카드 사용 가능
 
         // 주사위 굴리기
+        _moveDiceButton.SetActive(true);
         // 임시로직으로 바로 랜덤 값 생성(추후 주사위 굴리는 이벤트로 수정예정)
         yield return new WaitUntil(() => _isRoll);
         _isRoll = false;
         int rand = Random.Range(1, 11);
         Debug.Log($"플레이어 주사위 값 : {rand}");
+        _diceValue = rand;
+        OnChanged?.Invoke();
 
         // 칸 만큼 이동
         for (int i = 0; i < rand; i++)
@@ -168,7 +177,7 @@ public class GameStream : MonoBehaviour, IRefreshable
             if (i == rand - 1 || IsMoveActivate(_player.CurrentTile.Type))
             {
                 Debug.Log($"{_player.CurrentTile.Type} 이벤트 발생");
-                //yield return new WaitUntil(() => _isClose);
+                yield return StartCoroutine(ActivateEvent(_player.CurrentTile.Type));
             }
         }
     }
@@ -228,6 +237,9 @@ public class GameStream : MonoBehaviour, IRefreshable
             }
         }
     }
+    #endregion
+
+    #region 전투 페이즈
     private IEnumerator PlayerAttackPhase()
     {
         // 전투화면 UI 갱신
@@ -312,6 +324,36 @@ public class GameStream : MonoBehaviour, IRefreshable
         yield return new WaitForSeconds(0.5f);
 
         _battlePanel.gameObject.SetActive(false);
+    }
+    #endregion
+    private IEnumerator ActivateEvent(ETileType type)
+    {
+        switch (type)
+        {
+            case ETileType.CardShop:
+                yield return StartCoroutine(CardShop());
+                yield break;
+            case ETileType.Coin:
+                _player.AddGold(2); // 애니메이션 추가되면 코루틴으로 수정될 여지 있음
+                OnChanged?.Invoke();
+                yield break;
+            case ETileType.Shock:
+                _player.TakeDamage(2);
+                OnChanged?.Invoke();
+                yield break;
+            case ETileType.Health:
+                _player.RestoreHp(2);
+                OnChanged?.Invoke();
+                yield break;
+            default:
+                yield break;
+        }
+    }
+    private IEnumerator CardShop()
+    {
+        _cardShopPanel.SetActive(true);
+        yield return new WaitUntil(() => _isClose);
+        _isClose = false;
     }
 
     private void EnemySelectDirection(List<Tile> tiles, Tile prev, out Tile select)

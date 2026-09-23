@@ -5,7 +5,16 @@ using UnityEngine;
 public class BoardController : MonoBehaviour
 {
     [SerializeField] private List<Tile> _tiles;
-
+    private bool[,] table =
+    {
+        { true, true, true, true, true, true, true },
+        { false, false, false, false, false, false, false },
+        { false, false, false, false, false, false, false },
+        { false, false, false, false, false, false, false },
+        { false, false, false, false, false, false, false },
+        { false, false, false, false, false, false, false },
+        { false, false, false, false, false, false, false },
+    };
     public IReadOnlyList<Tile> Tiles => _tiles;
 
     public void DrawTiles()
@@ -33,6 +42,10 @@ public class BoardController : MonoBehaviour
                 return Color.coral;
             case ETileType.Coin:
                 return Color.chocolate;
+            case ETileType.Health:
+                return Color.pink;
+            case ETileType.Shock:
+                return Color.red;
             default:
                 return Color.white;
         }
