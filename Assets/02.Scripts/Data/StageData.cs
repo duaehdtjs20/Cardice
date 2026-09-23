@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "StageData", menuName = "Scriptable Objects/StageData")]
+[CreateAssetMenu(fileName = "StageData", menuName = "Data/StageData")]
 public class StageData : ScriptableObject
 {
     [SerializeField] private int _maxRound;

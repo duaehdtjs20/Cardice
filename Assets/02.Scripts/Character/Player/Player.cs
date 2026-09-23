@@ -9,6 +9,7 @@ public class Player : MonoBehaviour, IDamageable
     private int _maxHp = 10;
     private int _hp = 10;
     private int _gold = 10;
+    private Deck _deck;
 
     public Tile PrevTile => _prevTile;
     public Tile CurrentTile => _currentTile;
@@ -17,6 +18,7 @@ public class Player : MonoBehaviour, IDamageable
     public int Hp => _hp;
     public int MaxHp => _maxHp;
     public int Gold => _gold;
+    public Deck Deck => _deck;
 
     public void SpawnToTile(Tile spawnTile)
     {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "ChipData", menuName = "Scriptable Objects/ChipData")]
+[CreateAssetMenu(fileName = "ChipData", menuName = "Data/ChipData")]
 public class ChipData : ScriptableObject
 {
     [SerializeField] private int _id;
